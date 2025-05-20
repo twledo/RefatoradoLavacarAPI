@@ -18,4 +18,6 @@ public class WashService {
     public Wash scheduleWash(Wash wash) {return washRepository.save(wash);}
 
     public void delete(Long id) {washRepository.deleteById(id);}
+
+    public void deleteAllWashes() {washRepository.deleteAll();}
 }

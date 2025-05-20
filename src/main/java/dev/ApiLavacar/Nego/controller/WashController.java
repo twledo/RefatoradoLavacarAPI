@@ -4,6 +4,7 @@ import dev.ApiLavacar.Nego.model.Wash;
 import dev.ApiLavacar.Nego.repository.WashRepository;
 import dev.ApiLavacar.Nego.service.WashService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +17,12 @@ public class WashController {
     private WashService washService;
 
     @PostMapping("/schedule")
-    public Wash scheduleWash(@RequestBody Wash wash) {
-        return washService.scheduleWash(wash);
+    public ResponseEntity<?> scheduleWash(@RequestBody Wash wash) {
+        try {
+            Wash newWash = washService.scheduleWash(wash);
+            return ResponseEntity.ok(newWash);
+        } catch (Exception e) {
+            return ResponseEntity.status(403).body("Erro ao agendar lavagem: " + e.getMessage());
+        }
     }
 }
