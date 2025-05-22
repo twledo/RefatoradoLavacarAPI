@@ -1,4 +1,4 @@
-package dev.ApiLavacar.Nego.controller;
+package dev.ApiLavacar.Nego.model;
 
 import lombok.Getter;
 

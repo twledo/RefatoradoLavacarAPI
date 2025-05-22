@@ -11,22 +11,21 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "washesLavacar")
 public class Wash {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nameClient;
-    private double valueWash;
+    private double priceWash;
     private String modelCar;
     private LocalDate dateHour;
     private String description;
 
-    public Wash(Long id, String nameClient, double valueWash, String modelCar, LocalDate dateHour, String description) {
+    public Wash(Long id, String nameClient, double priceWash, String modelCar, LocalDate dateHour, String description) {
         this.id = id;
         this.nameClient = nameClient;
-        this.valueWash = valueWash;
+        this.priceWash = priceWash;
         this.modelCar = modelCar;
         this.dateHour = dateHour;
         this.description = description;

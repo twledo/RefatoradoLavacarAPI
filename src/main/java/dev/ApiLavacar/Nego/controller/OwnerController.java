@@ -1,5 +1,6 @@
 package dev.ApiLavacar.Nego.controller;
 
+import dev.ApiLavacar.Nego.model.LoginRequest;
 import dev.ApiLavacar.Nego.model.Wash;
 import dev.ApiLavacar.Nego.security.JwtUtil;
 import dev.ApiLavacar.Nego.service.WashService;
@@ -64,7 +65,7 @@ public class OwnerController {
         } catch (AuthenticationException e) {
             return ResponseEntity.status(401).body("Não autenticado. Faça login para acessar este recurso.");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro ao recuperar lavagens: " + e.getMessage());
+            return ResponseEntity.status(500).body("Acesso negado.");
         }
     }
 
@@ -74,7 +75,7 @@ public class OwnerController {
             washService.delete(id);
             return ResponseEntity.ok("Lavagem deletada com sucesso.");
         } catch (Exception e) {
-            return ResponseEntity.status(404).body("Lavagem não encontrada para o id: " + id);
+            return ResponseEntity.status(404).body("Lavagem não encontrada");
         }
     }
 
@@ -84,7 +85,7 @@ public class OwnerController {
             washService.deleteAllWashes();
             return ResponseEntity.ok("Lavagens deletadas com sucesso.");
         } catch (Exception e) {
-            return ResponseEntity.status(403).body("Sem autorização" + e.getMessage());
+            return ResponseEntity.status(403).body("Sem autorização");
         }
     }
 }
