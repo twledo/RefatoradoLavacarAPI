@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - Lavacar</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f0f0f0; padding: 40px; }
+        .container { max-width: 350px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 8px #ccc; }
+        input, button { width: 100%; padding: 10px; margin: 8px 0; font-size: 16px; }
+        button { cursor: pointer; }
+        #error-msg { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Login Owner</h2>
+    <input id="username" placeholder="Usuário" autocomplete="username" />
+    <input id="password" type="password" placeholder="Senha" autocomplete="current-password" />
+    <button onclick="login()">Entrar</button>
+    <p id="error-msg"></p>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:8080'; // Ajuste se precisar
+
+    async function login() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const error = document.getElementById('error-msg');
+      error.textContent = '';
+
+      if(!user || !pass) {
+        error.textContent = 'Informe usuário e senha';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/owner/login`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({username: user, password: pass})
+        });
+
+        if(!res.ok) {
+          const msg = await res.text();
+          throw new Error(msg);
+        }
+
+        const data = await res.json();
+        localStorage.setItem('token', data.token);
+        window.location.href = 'admin.html'; // redireciona pro painel admin
+      } catch(e) {
+        error.textContent = 'Erro: ' + e.message;
+      }
+    }
+</script>
+</body>
+</html>

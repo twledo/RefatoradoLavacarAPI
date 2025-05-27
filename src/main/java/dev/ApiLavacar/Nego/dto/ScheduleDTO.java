@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-//ok
 @Getter
 @Setter
 public class ScheduleDTO {
@@ -14,6 +13,6 @@ public class ScheduleDTO {
         private String modelCar;
         private LocalDateTime dateTime;
         private String descriptionService;
-        private String status;
-        private Long jobWashId;
+        private boolean active;
+        private JobWashDTO jobWash;
 }

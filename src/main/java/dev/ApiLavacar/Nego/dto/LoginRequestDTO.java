@@ -1,9 +1,9 @@
-package dev.ApiLavacar.Nego.model;
+package dev.ApiLavacar.Nego.dto;
 
 import lombok.Getter;
 
 @Getter
-public class LoginRequest {
+public class LoginRequestDTO {
     private String username;
     private String password;
 }

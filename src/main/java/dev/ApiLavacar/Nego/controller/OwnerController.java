@@ -1,6 +1,6 @@
 package dev.ApiLavacar.Nego.controller;
 
-import dev.ApiLavacar.Nego.model.LoginRequest;
+import dev.ApiLavacar.Nego.dto.LoginRequestDTO;
 import dev.ApiLavacar.Nego.model.Wash;
 import dev.ApiLavacar.Nego.security.JwtUtil;
 import dev.ApiLavacar.Nego.service.WashService;
@@ -34,7 +34,7 @@ public class OwnerController {
      * Recebe username e senha, valida, e retorna token JWT.
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
         try {
             // Autentica o usuário com os dados fornecidos
             var authToken = new UsernamePasswordAuthenticationToken(

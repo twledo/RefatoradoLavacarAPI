@@ -1,6 +1,7 @@
 package dev.ApiLavacar.Nego.service;
 
 import dev.ApiLavacar.Nego.model.Wash;
+import dev.ApiLavacar.Nego.repository.ScheduleRepository;
 import dev.ApiLavacar.Nego.repository.WashRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
