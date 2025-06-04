@@ -1,8 +1,11 @@
 package dev.ApiLavacar.Nego.controller;
 
 import dev.ApiLavacar.Nego.dto.ScheduleDTO;
+import dev.ApiLavacar.Nego.model.Hour;
 import dev.ApiLavacar.Nego.model.JobWash;
 import dev.ApiLavacar.Nego.model.Schedule;
+import dev.ApiLavacar.Nego.repository.HoursRepository;
+import dev.ApiLavacar.Nego.service.HourService;
 import dev.ApiLavacar.Nego.service.JobService;
 import dev.ApiLavacar.Nego.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;

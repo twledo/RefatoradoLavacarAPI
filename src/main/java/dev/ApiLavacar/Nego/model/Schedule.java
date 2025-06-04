@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 //ok
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,7 +21,7 @@ public class Schedule {
     private String nameClient;
     private String phone;
     private String modelCar;
-    private LocalDateTime dateTime;
+    private LocalDate dateTime;
     private String descriptionService;
     private boolean active = true;
 

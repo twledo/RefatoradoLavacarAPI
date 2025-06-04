@@ -28,7 +28,6 @@ public class JobController {
         return ResponseEntity.ok(jobs);
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<JobWash> update(@PathVariable Long id, @RequestBody JobWash data) {
         Optional<JobWash> existing = jobService.findById(id);
