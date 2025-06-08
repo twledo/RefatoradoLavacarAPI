@@ -4,14 +4,14 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-//ok
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "scheduleClients")
+@Getter
+@Setter
+//OBJETO QUE VAI PRO BANCO DE DADOS
 public class Schedule {
 
     @Id
@@ -21,10 +21,16 @@ public class Schedule {
     private String nameClient;
     private String phone;
     private String modelCar;
-    private LocalDate dateTime;
+    private LocalDate date;
     private String descriptionService;
     private boolean active = true;
 
+    //Muitos agendamentos podem estar relacionados a uma única hora
+    @ManyToOne
+    private Hour hour;
+
+    //Muitos agendamentos podem estar relacionados a um unico serviço
     @ManyToOne
     private JobWash jobWash;
 }
+

@@ -1,5 +1,6 @@
 package dev.ApiLavacar.Nego.controller;
 
+import dev.ApiLavacar.Nego.dto.HourDTO;
 import dev.ApiLavacar.Nego.dto.ScheduleDTO;
 import dev.ApiLavacar.Nego.model.Hour;
 import dev.ApiLavacar.Nego.model.JobWash;
@@ -21,6 +22,9 @@ import java.util.List;
 public class PublicServiceController {
 
     @Autowired
+    private HourService hourService;
+
+    @Autowired
     private JobService jobService;
 
     @Autowired
@@ -32,10 +36,10 @@ public class PublicServiceController {
         return ResponseEntity.ok(jobs);
     }
 
-    @GetMapping("/schedules")
-    public List<ScheduleDTO> returnAllWashes() {
-        return scheduleService.returnWashes();
-    }
+//    @GetMapping("/schedules")
+//    public List<ScheduleDTO> returnAllWashes() {
+//        return scheduleService.returnWashes();
+//    }
 
     @PostMapping("/addSchedule")
     public ResponseEntity<?> addSchedule(@RequestBody ScheduleDTO scheduleDTO) {
@@ -47,5 +51,10 @@ public class PublicServiceController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno no servidor");
         }
+    }
+
+    @GetMapping("/getHours")
+    public List<HourDTO> getAllHours() {
+        return hourService.getAllHours();
     }
 }

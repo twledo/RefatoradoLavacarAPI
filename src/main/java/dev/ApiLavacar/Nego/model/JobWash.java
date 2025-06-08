@@ -22,6 +22,4 @@ public class JobWash {
     private String name;
     private Double price;
     private String description;
-    private LocalDateTime availableDateTime;
-    private Integer maxCarsPerSlot;
 }

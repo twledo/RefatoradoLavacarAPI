@@ -1,8 +1,6 @@
 package dev.ApiLavacar.Nego.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +15,8 @@ import java.time.LocalTime;
 public class HourDTO {
 
   private Long id;
+
+  @JsonFormat(pattern = "HH:mm")
   private LocalTime hour;
 
 }

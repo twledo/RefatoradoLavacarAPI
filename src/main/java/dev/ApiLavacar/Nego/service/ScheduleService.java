@@ -1,9 +1,13 @@
 package dev.ApiLavacar.Nego.service;
 
+import dev.ApiLavacar.Nego.dto.HourDTO;
 import dev.ApiLavacar.Nego.dto.JobWashDTO;
 import dev.ApiLavacar.Nego.dto.ScheduleDTO;
+import dev.ApiLavacar.Nego.mapper.ScheduleMapper;
+import dev.ApiLavacar.Nego.model.Hour;
 import dev.ApiLavacar.Nego.model.JobWash;
 import dev.ApiLavacar.Nego.model.Schedule;
+import dev.ApiLavacar.Nego.repository.HoursRepository;
 import dev.ApiLavacar.Nego.repository.JobRepository;
 import dev.ApiLavacar.Nego.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,57 +20,49 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     @Autowired
+    private ScheduleMapper scheduleMapper;
+
+    @Autowired
     private ScheduleRepository scheduleRepository;
 
     @Autowired
     private JobRepository jobRepository;
 
+    @Autowired
+    private HoursRepository hoursRepository;
+
     public Schedule addScheduleWash(ScheduleDTO dto) {
+        if (dto.getHour() == null || dto.getHour().getId() == null)
+            throw new RuntimeException("Hora não informada no DTO");
+
+        if (dto.getJobWash() == null || dto.getJobWash().getId() == null)
+            throw new RuntimeException("Serviço não informado no DTO");
+
+        Long idHour = dto.getHour().getId();
+        Hour hour = hoursRepository.findById(idHour)
+          .orElseThrow(() -> new RuntimeException("Hora não encontrada com ID: \"" + idHour + "\""));
+        System.out.println("Hora encontrada: " + hour.getHour());
+
         Long idJob = dto.getJobWash().getId();
         JobWash job = jobRepository.findById(idJob)
-                    .orElseThrow(() -> new RuntimeException("Serviço não encontrado com ID: \" + idJob"));
-        System.out.println("Serviço encontrado: " + job);
-        Schedule entitySchedule = convertToEntity(dto);
+          .orElseThrow(() -> new RuntimeException("Serviço não encontrado com ID: \"" + idJob + "\""));
+        System.out.println("Serviço encontrado: " + job.getName());
+
+        Schedule entitySchedule = scheduleMapper.toEntity(dto);
+        entitySchedule.setHour(hour);
         entitySchedule.setJobWash(job);
+
         return scheduleRepository.save(entitySchedule);
+    }
+
+    public void deleteById(Long id) {
+        scheduleRepository.deleteById(id);
     }
 
     public List<ScheduleDTO> returnWashes() {
         List<Schedule> schedules = scheduleRepository.findAll();
         return schedules.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
-
-    // Conversão DTO -> Entity
-    private Schedule convertToEntity(ScheduleDTO dto) {
-        Schedule schedule = new Schedule();
-        schedule.setNameClient(dto.getNameClient());
-        schedule.setPhone(dto.getPhone());
-        schedule.setModelCar(dto.getModelCar());
-        schedule.setDescriptionService(dto.getDescriptionService());
-        schedule.setDateTime(dto.getDateTime());
-        // JobWash será setado depois, na addScheduleWash
-        return schedule;
-    }
-
-    // Conversão Entity -> DTO
-    private ScheduleDTO convertToDto(Schedule schedule) {
-        ScheduleDTO dto = new ScheduleDTO();
-        dto.setNameClient(schedule.getNameClient());
-        dto.setPhone(schedule.getPhone());
-        dto.setModelCar(schedule.getModelCar());
-        dto.setDescriptionService(schedule.getDescriptionService());
-        dto.setDateTime(schedule.getDateTime());
-        dto.setActive(schedule.isActive());
-
-        if (schedule.getJobWash() != null) {
-            JobWashDTO jobWashDto = new JobWashDTO();
-            jobWashDto.setId(schedule.getJobWash().getId());
-            jobWashDto.setName(schedule.getJobWash().getName());
-            dto.setJobWash(jobWashDto);
-        }
-
-        return dto;
+          .map(scheduleMapper::toDto)
+          .collect(Collectors.toList());
     }
 }

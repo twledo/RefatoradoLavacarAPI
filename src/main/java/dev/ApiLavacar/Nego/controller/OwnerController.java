@@ -1,21 +1,16 @@
 package dev.ApiLavacar.Nego.controller;
 
-import dev.ApiLavacar.Nego.dto.HourDTO;
 import dev.ApiLavacar.Nego.dto.LoginRequestDTO;
-import dev.ApiLavacar.Nego.model.Hour;
-import dev.ApiLavacar.Nego.model.Wash;
-import dev.ApiLavacar.Nego.repository.HoursRepository;
+import dev.ApiLavacar.Nego.dto.ScheduleDTO;
 import dev.ApiLavacar.Nego.security.JwtUtil;
 import dev.ApiLavacar.Nego.service.HourService;
-import dev.ApiLavacar.Nego.service.WashService;
+import dev.ApiLavacar.Nego.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +24,7 @@ public class OwnerController {
     private HourService hourService;
 
     @Autowired
-    private WashService washService;
+    private ScheduleService scheduleService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -66,34 +61,13 @@ public class OwnerController {
     @GetMapping("/getWashes")
     public ResponseEntity<?> getAllWashes() {
         try {
-            List<Wash> washes = washService.getAllWashes();
+            List<ScheduleDTO> washes = scheduleService.returnWashes();
             if (washes.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Nenhum agendamento encontrado.");
             }
             return ResponseEntity.ok(washes);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Erro ao buscar agendamentos: " + e.getMessage());
-        }
-    }
-
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteWash(@PathVariable Long id) {
-        try {
-            washService.delete(id);
-            return ResponseEntity.ok("Lavagem deletada com sucesso.");
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body("Lavagem não encontrada");
-        }
-    }
-
-    @DeleteMapping("/deleteAllWashes")
-    public ResponseEntity<?> deleteWash() {
-        try {
-            washService.deleteAllWashes();
-            return ResponseEntity.ok("Lavagens deletadas com sucesso.");
-        } catch (Exception e) {
-            return ResponseEntity.status(403).body("Sem autorização");
         }
     }
 }

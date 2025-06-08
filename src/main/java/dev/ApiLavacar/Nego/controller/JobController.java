@@ -16,16 +16,16 @@ public class JobController {
     @Autowired
     private JobService  jobService;
 
-    @PostMapping
-    public ResponseEntity<JobWash> create(@RequestBody JobWash jobWash) {
-        JobWash newJob = jobService.save(jobWash);
-        return ResponseEntity.ok(newJob);
-    }
-
     @GetMapping
     public ResponseEntity<List<JobWash>> listAll() {
         List<JobWash> jobs = jobService.listAll();
         return ResponseEntity.ok(jobs);
+    }
+
+    @PostMapping
+    public ResponseEntity<JobWash> create(@RequestBody JobWash jobWash) {
+        JobWash newJob = jobService.save(jobWash);
+        return ResponseEntity.ok(newJob);
     }
 
     @PutMapping("/{id}")

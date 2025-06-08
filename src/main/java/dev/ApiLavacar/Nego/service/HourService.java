@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HourService {
@@ -18,40 +19,35 @@ public class HourService {
   public HourDTO addHour(HourDTO hourDTO) {
     Hour hour = new Hour();
     hour.setHour(hourDTO.getHour());
-
     Hour saved = hoursRepository.save(hour);
-
-    HourDTO response = new HourDTO();
-    response.setHour(saved.getHour());
-
-    return response;
+    return new HourDTO(saved.getId(), saved.getHour());
   }
 
-  public List<Hour> getAllHours() {
-    return hoursRepository.findAll();
+  public List<HourDTO> getAllHours() {
+    return hoursRepository.findAll()
+      .stream()
+      .map(h -> new HourDTO(h.getId(), h.getHour()))
+      .collect(Collectors.toList());
   }
 
-  public HourDTO editHour(HourDTO hourDTO) {
-    // Busca a entidade no banco pelo ID
-    Optional<Hour> optionalHour = hoursRepository.findById(hourDTO.getId());
-
+  public HourDTO editHour(Long id, HourDTO hourDTO) {
+    Optional<Hour> optionalHour = hoursRepository.findById(id);
     if (optionalHour.isPresent()) {
       Hour hour = optionalHour.get();
-      // Atualiza os campos
       hour.setHour(hourDTO.getHour());
-
-      // Salva no banco
       Hour updated = hoursRepository.save(hour);
-
-      // Prepara e retorna o DTO de resposta
-      HourDTO response = new HourDTO();
-      response.setId(updated.getId());
-      response.setHour(updated.getHour());
-
-      return response;
-    } else {
-      throw new RuntimeException("Hour not found with id: " + hourDTO.getId());
+      return new HourDTO(updated.getId(), updated.getHour());
     }
+    return null;
   }
 
+  public HourDTO findById(Long id) {
+    return hoursRepository.findById(id)
+      .map(hour -> new HourDTO(hour.getId(), hour.getHour()))
+      .orElse(null); // ou lançar uma exceção, se preferir
+  }
+
+  public void deleteHour(Long id) {
+    hoursRepository.deleteById(id);
+  }
 }
