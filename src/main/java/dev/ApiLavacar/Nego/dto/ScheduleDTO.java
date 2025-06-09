@@ -17,7 +17,7 @@ public class ScheduleDTO {
         private String phone;
         private String modelCar;
         private LocalDate date;
-        private Hour hour;
+        private HourDTO hourDTO;
         private String descriptionService;
         private boolean active;
         private JobWashDTO jobWash;

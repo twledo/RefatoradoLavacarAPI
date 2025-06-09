@@ -5,10 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "scheduleClients")
+@Table(name = "schedule")
 @Getter
 @Setter
 //OBJETO QUE VAI PRO BANCO DE DADOS

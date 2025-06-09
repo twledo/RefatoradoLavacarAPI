@@ -1,7 +1,9 @@
 package dev.ApiLavacar.Nego.mapper;
 
+import dev.ApiLavacar.Nego.dto.HourDTO;
 import dev.ApiLavacar.Nego.dto.JobWashDTO;
 import dev.ApiLavacar.Nego.dto.ScheduleDTO;
+import dev.ApiLavacar.Nego.model.Hour;
 import dev.ApiLavacar.Nego.model.JobWash;
 import dev.ApiLavacar.Nego.model.Schedule;
 import org.springframework.stereotype.Component;
@@ -17,7 +19,7 @@ public class ScheduleMapper {
     schedule.setPhone(dto.getPhone());
     schedule.setModelCar(dto.getModelCar());
     schedule.setDescriptionService(dto.getDescriptionService());
-    schedule.setHour(dto.getHour()); // será sobrescrito em addScheduleWash
+    schedule.setDate(dto.getDate());
     return schedule;
   }
 
@@ -29,7 +31,7 @@ public class ScheduleMapper {
     dto.setPhone(schedule.getPhone());
     dto.setModelCar(schedule.getModelCar());
     dto.setDescriptionService(schedule.getDescriptionService());
-    dto.setHour(schedule.getHour());
+    dto.setDate(schedule.getDate());
     dto.setActive(schedule.isActive());
 
     if (schedule.getJobWash() != null) {
@@ -40,6 +42,15 @@ public class ScheduleMapper {
       dto.setJobWash(jobDto);
     }
 
+    if (schedule.getHour() != null) {
+      Hour hour = schedule.getHour();
+      HourDTO hourDTO = new HourDTO();
+      hourDTO.setId(hour.getId());
+      hourDTO.setHour(hour.getHour());
+      dto.setHourDTO(hourDTO);
+    }
+
     return dto;
   }
+
 }

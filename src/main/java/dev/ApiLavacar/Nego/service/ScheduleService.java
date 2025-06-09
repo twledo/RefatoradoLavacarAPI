@@ -1,7 +1,6 @@
 package dev.ApiLavacar.Nego.service;
 
 import dev.ApiLavacar.Nego.dto.HourDTO;
-import dev.ApiLavacar.Nego.dto.JobWashDTO;
 import dev.ApiLavacar.Nego.dto.ScheduleDTO;
 import dev.ApiLavacar.Nego.mapper.ScheduleMapper;
 import dev.ApiLavacar.Nego.model.Hour;
@@ -32,26 +31,35 @@ public class ScheduleService {
     private HoursRepository hoursRepository;
 
     public Schedule addScheduleWash(ScheduleDTO dto) {
-        if (dto.getHour() == null || dto.getHour().getId() == null)
-            throw new RuntimeException("Hora não informada no DTO");
+        // Validar se hourDTO e jobWash existem no DTO
+        if (dto.getHourDTO() == null || dto.getHourDTO().getId() == null) {
+            throw new IllegalArgumentException("Hora não informada no DTO");
+        }
 
-        if (dto.getJobWash() == null || dto.getJobWash().getId() == null)
-            throw new RuntimeException("Serviço não informado no DTO");
+        if (dto.getJobWash() == null || dto.getJobWash().getId() == null) {
+            throw new IllegalArgumentException("Serviço de lavagem não informado no DTO");
+        }
 
-        Long idHour = dto.getHour().getId();
-        Hour hour = hoursRepository.findById(idHour)
-          .orElseThrow(() -> new RuntimeException("Hora não encontrada com ID: \"" + idHour + "\""));
-        System.out.println("Hora encontrada: " + hour.getHour());
+        // Buscar Hour pelo ID
+        Optional<Hour> hourOptional = hoursRepository.findById(dto.getHourDTO().getId());
+        if (hourOptional.isEmpty()) {
+            throw new IllegalArgumentException("Hora com ID " + dto.getHourDTO().getId() + " não encontrada");
+        }
 
-        Long idJob = dto.getJobWash().getId();
-        JobWash job = jobRepository.findById(idJob)
-          .orElseThrow(() -> new RuntimeException("Serviço não encontrado com ID: \"" + idJob + "\""));
-        System.out.println("Serviço encontrado: " + job.getName());
+        // Buscar JobWash pelo ID
+        Optional<JobWash> jobOptional = jobRepository.findById(dto.getJobWash().getId());
+        if (jobOptional.isEmpty()) {
+            throw new IllegalArgumentException("Serviço com ID " + dto.getJobWash().getId() + " não encontrado");
+        }
 
+        // Converter DTO para entidade
         Schedule entitySchedule = scheduleMapper.toEntity(dto);
-        entitySchedule.setHour(hour);
-        entitySchedule.setJobWash(job);
 
+        // Setar Hour e JobWash na entidade
+        entitySchedule.setHour(hourOptional.get());
+        entitySchedule.setJobWash(jobOptional.get());
+
+        // Salvar no banco
         return scheduleRepository.save(entitySchedule);
     }
 
