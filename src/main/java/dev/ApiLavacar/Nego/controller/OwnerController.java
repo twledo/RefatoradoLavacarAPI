@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controller para operações do proprietário, como login e gerenciamento de agendamentos.
+ */
 @RestController
 @RequestMapping("/owner")
 public class OwnerController {
@@ -33,31 +36,33 @@ public class OwnerController {
     private JwtUtil jwtUtil;
 
     /**
-     * Endpoint para login de usuário.
-     * Recebe username e senha, valida, e retorna token JWT.
+     * Autentica o usuário e gera token JWT.
+     * @param loginRequest dados de login (username e password)
+     * @return token JWT em caso de sucesso ou erro apropriado
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
         try {
-            // Autentica o usuário com os dados fornecidos
             var authToken = new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(), loginRequest.getPassword());
+              loginRequest.getUsername(), loginRequest.getPassword());
 
             authenticationManager.authenticate(authToken);
 
-            // Gera o token JWT
             String token = jwtUtil.generateToken(loginRequest.getUsername());
 
-            // Retorna o token
             return ResponseEntity.ok(Map.of("token", token));
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(403).body("Usuário ou senha inválidos.");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro ao processar o login." + e.getMessage());
+            return ResponseEntity.status(500).body("Erro ao processar o login. " + e.getMessage());
         }
     }
 
+    /**
+     * Retorna todos os agendamentos de lavagem.
+     * @return lista de agendamentos ou mensagem caso vazio
+     */
     @GetMapping("/getWashes")
     public ResponseEntity<?> getAllWashes() {
         try {

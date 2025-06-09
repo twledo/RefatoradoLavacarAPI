@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Serviço responsável pela lógica de agendamento de lavagens.
+ */
 @Service
 public class ScheduleService {
 
@@ -30,8 +33,14 @@ public class ScheduleService {
     @Autowired
     private HoursRepository hoursRepository;
 
+    /**
+     * Adiciona um novo agendamento de lavagem baseado nos dados do ScheduleDTO.
+     *
+     * @param dto objeto ScheduleDTO contendo os dados do agendamento, incluindo HourDTO e JobWash
+     * @return o objeto Schedule persistido no banco de dados
+     * @throws IllegalArgumentException se o HourDTO ou JobWash não estiverem presentes ou não forem encontrados no banco
+     */
     public Schedule addScheduleWash(ScheduleDTO dto) {
-        // Validar se hourDTO e jobWash existem no DTO
         if (dto.getHourDTO() == null || dto.getHourDTO().getId() == null) {
             throw new IllegalArgumentException("Hora não informada no DTO");
         }
@@ -40,33 +49,37 @@ public class ScheduleService {
             throw new IllegalArgumentException("Serviço de lavagem não informado no DTO");
         }
 
-        // Buscar Hour pelo ID
         Optional<Hour> hourOptional = hoursRepository.findById(dto.getHourDTO().getId());
         if (hourOptional.isEmpty()) {
             throw new IllegalArgumentException("Hora com ID " + dto.getHourDTO().getId() + " não encontrada");
         }
 
-        // Buscar JobWash pelo ID
         Optional<JobWash> jobOptional = jobRepository.findById(dto.getJobWash().getId());
         if (jobOptional.isEmpty()) {
             throw new IllegalArgumentException("Serviço com ID " + dto.getJobWash().getId() + " não encontrado");
         }
 
-        // Converter DTO para entidade
         Schedule entitySchedule = scheduleMapper.toEntity(dto);
-
-        // Setar Hour e JobWash na entidade
         entitySchedule.setHour(hourOptional.get());
         entitySchedule.setJobWash(jobOptional.get());
 
-        // Salvar no banco
         return scheduleRepository.save(entitySchedule);
     }
 
+    /**
+     * Remove um agendamento pelo seu ID.
+     *
+     * @param id o identificador do agendamento a ser removido
+     */
     public void deleteById(Long id) {
         scheduleRepository.deleteById(id);
     }
 
+    /**
+     * Retorna a lista de todos os agendamentos de lavagem cadastrados.
+     *
+     * @return lista de ScheduleDTO representando todos os agendamentos existentes
+     */
     public List<ScheduleDTO> returnWashes() {
         List<Schedule> schedules = scheduleRepository.findAll();
         return schedules.stream()

@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
+/**
+ * Serviço responsável pela lógica de negócio relacionada ao Owner (Dono do Lavacar).
+ */
 @Service
 public class OwnerService {
 
@@ -17,6 +20,13 @@ public class OwnerService {
     @Autowired
     private OwnerRepository ownerRepository;
 
+    /**
+     * Autentica um Dono do Lavacar pelo username e password.
+     *
+     * @param username o nome de usuário do dono
+     * @param password a senha do dono
+     * @return um Optional contendo o Dono autenticado, ou vazio caso não encontrado ou erro ocorra
+     */
     public Optional<Owner> authenticateOwner(String username, String password) {
         try {
             return ownerRepository.findByUsernameAndPassword(username, password);

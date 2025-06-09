@@ -2,10 +2,7 @@ package dev.ApiLavacar.Nego.controller;
 
 import dev.ApiLavacar.Nego.dto.HourDTO;
 import dev.ApiLavacar.Nego.dto.ScheduleDTO;
-import dev.ApiLavacar.Nego.model.Hour;
 import dev.ApiLavacar.Nego.model.JobWash;
-import dev.ApiLavacar.Nego.model.Schedule;
-import dev.ApiLavacar.Nego.repository.HoursRepository;
 import dev.ApiLavacar.Nego.service.HourService;
 import dev.ApiLavacar.Nego.service.JobService;
 import dev.ApiLavacar.Nego.service.ScheduleService;
@@ -16,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller público para acesso a horários, serviços e agendamentos.
+ */
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/public")
@@ -30,21 +30,25 @@ public class PublicServiceController {
     @Autowired
     private ScheduleService scheduleService;
 
+    /**
+     * Lista todos os serviços de lavagem disponíveis.
+     * @return lista de serviços
+     */
     @GetMapping("/jobs")
     public ResponseEntity<List<JobWash>> listAll() {
         List<JobWash> jobs = jobService.listAll();
         return ResponseEntity.ok(jobs);
     }
 
-//    @GetMapping("/schedules")
-//    public List<ScheduleDTO> returnAllWashes() {
-//        return scheduleService.returnWashes();
-//    }
-
+    /**
+     * Adiciona um novo agendamento de lavagem.
+     * @param scheduleDTO dados do agendamento
+     * @return agendamento criado ou mensagem de erro
+     */
     @PostMapping("/addSchedule")
     public ResponseEntity<?> addSchedule(@RequestBody ScheduleDTO scheduleDTO) {
         try {
-            Schedule savedSchedule = scheduleService.addScheduleWash(scheduleDTO);
+            var savedSchedule = scheduleService.addScheduleWash(scheduleDTO);
             return ResponseEntity.ok(savedSchedule);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
@@ -53,6 +57,10 @@ public class PublicServiceController {
         }
     }
 
+    /**
+     * Lista todos os horários disponíveis.
+     * @return lista de horários
+     */
     @GetMapping("/getHours")
     public List<HourDTO> getAllHours() {
         return hourService.getAllHours();
